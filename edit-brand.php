@@ -1,36 +1,37 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['vrmsaid']==0)) {
   header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
-$adminid=$_SESSION['vrmsaid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tbladmin where ID='$adminid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tbladmin set Password='$newpassword' where ID='$adminid'");
-$msg= "Your password successully changed"; 
-} else {
+    if(isset($_POST['submit']))
+  {
 
-$msg="Your current password is wrong";
-}
+$cmsaid=$_SESSION['vrmsaid'];
+$bname=$_POST['brandname'];
+$eid=$_GET['editid'];
 
+ $query=mysqli_query($con,"update tblbrand Set BrandName='$bname' where ID='$eid'");
 
+    if ($query) {
+    $msg="Company details has been updated.";
+  }
+  else
+    {
+      $msg="Something Went Wrong. Please try again";
+    }
 
-}
-
+  }
   
-  ?>
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Vehicle Rental Management Sysytem | Change Password</title>
+    <title>Vehicle Rental Management Sysytem | Vehicle Brand</title>
    
 
     <!-- Style-sheets -->
@@ -52,19 +53,6 @@ $msg="Your current password is wrong";
     <link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!--//web-fonts-->
-    <script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
 </head>
 
 <body>
@@ -79,7 +67,7 @@ return true;
             <!--// top-bar -->
 
             <!-- main-heading -->
-            <h2 class="main-title-w3layouts mb-2 text-center"> Change Password</h2>
+            <h2 class="main-title-w3layouts mb-2 text-center"> Vehicle Brand</h2>
             <!--// main-heading -->
 
             <!-- Forms content -->
@@ -88,37 +76,39 @@ return true;
                
                 <!-- Forms-3 -->
                 <div class="outer-w3-agile mt-3">
-                    <h4 class="tittle-w3-agileits mb-4"> Change Password</h4>
+                    <h4 class="tittle-w3-agileits mb-4"> Vehicle Brand</h4>
 
-   <?php
-$adminid=$_SESSION['vrmsaid'];
-$ret=mysqli_query($con,"select * from tbladmin where ID='$adminid'");
+                    <form action="#" method="post">
+                        <p style="font-size:16px; color:red" align="left"> <?php if($msg){
+    echo $msg;
+  }  ?> </p>
+                        <?php
+ $cid=$_GET['editid'];
+$ret=mysqli_query($con,"select * from  tblbrand where ID='$cid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-                    <form action="#" method="post" name="changepassword" onsubmit="return checkpass();">
-                        <p style="font-size:16px; color:red" align="center"> <?php if($msg){
-    echo $msg;
-  }  ?> </p>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputEmail4">Current Password:</label>
+                                <label for="inputEmail4">Brand Name</label>
                                 
-                                <input type="password" name="currentpassword" class=" form-control" required= "true" value="">
+                                <input class=" form-control" id="brandname" name="brandname" type="text" value="<?php  echo $row['BrandName'];?>">
                             </div>
+                           
+                        </div>
+                        <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputPassword4">New Password:</label>
-                                <input type="password" name="newpassword" class="form-control" value="">
+                                <label for="inputEmail4">Brand Logo</label>
+                                
+                                <img src="images/<?php echo $row['BrandLogo'];?>" width="200" height="150" value="<?php  echo $row['BrandLogo'];?>"><a href="changelogo.php?imageid=<?php echo $row['ID'];?>">Edit Image</a>
                             </div>
+                           
                         </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Confirm Password:</label>
-                            <input type="password" name="confirmpassword" class="form-control" value="">
-                        </div>
-                       
+                        
                         <?php } ?>
-                        <button type="submit" class="btn btn-primary" name="submit">Change</button>
+                        
+                        <button type="submit" class="btn btn-primary" name="submit">Update</button>
                     </form>
                 </div>
               

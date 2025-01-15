@@ -5,166 +5,90 @@ include('includes/dbconnection.php');
 
 if(isset($_POST['login']))
   {
-    $emailcon=$_POST['emailcont'];
+    $adminuser=$_POST['username'];
     $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbluser where  (Email='$emailcon' || MobileNumber='$emailcon') && Password='$password' ");
+    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
-      $_SESSION['vrmsuid']=$ret['ID'];
-     header('location:index.php');
+      $_SESSION['vrmsaid']=$ret['ID'];
+     header('location:dashboard.php');
     }
     else{
     $msg="Invalid Details.";
     }
   }
   ?>
-
 <!DOCTYPE html>
-<html class="no-js" lang="zxx">
+<html lang="en">
 
 <head>
-   
+    <title>Vehicle Rental Management Sysytem | Login Page</title>
+    
+    
+    
+    <!-- Style-sheets -->
+    <!-- Bootstrap Css -->
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Bootstrap Css -->
+    <!-- Common Css -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!--// Common Css -->
+    <!-- Fontawesome Css -->
+    <link href="css/fontawesome-all.css" rel="stylesheet">
+    <!--// Fontawesome Css -->
+    <!--// Style-sheets -->
 
-    <title>Vehicle Rental Management System || Sign In</title>
-
-    <!--=== Bootstrap CSS ===-->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <!--=== Slicknav CSS ===-->
-    <link href="assets/css/plugins/slicknav.min.css" rel="stylesheet">
-    <!--=== Magnific Popup CSS ===-->
-    <link href="assets/css/plugins/magnific-popup.css" rel="stylesheet">
-    <!--=== Owl Carousel CSS ===-->
-    <link href="assets/css/plugins/owl.carousel.min.css" rel="stylesheet">
-    <!--=== Gijgo CSS ===-->
-    <link href="assets/css/plugins/gijgo.css" rel="stylesheet">
-    <!--=== FontAwesome CSS ===-->
-    <link href="assets/css/font-awesome.css" rel="stylesheet">
-    <!--=== Theme Reset CSS ===-->
-    <link href="assets/css/reset.css" rel="stylesheet">
-    <!--=== Main Style CSS ===-->
-    <link href="style.css" rel="stylesheet">
-    <!--=== Responsive CSS ===-->
-    <link href="assets/css/responsive.css" rel="stylesheet">
-
-
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!--web-fonts-->
+    <link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!--//web-fonts-->
 </head>
 
-<body class="loader-active">
-
-    <!--== Preloader Area Start ==-->
-    <div class="preloader">
-        <div class="preloader-spinner">
-            <div class="loader-content">
-                <img src="assets/img/preloader.gif" alt="JSOFT">
-            </div>
-        </div>
-    </div>
-    <!--== Preloader Area End ==-->
-
-   <?php include_once('includes/header.php');?>
-
-    <!--== Page Title Area Start ==-->
-    <section id="page-title-area" class="section-padding overlay">
+<body>
+    <div class="bg-page py-5">
         <div class="container">
-            <div class="row">
-                <!-- Page Title Start -->
-                <div class="col-lg-12">
-                    <div class="section-title  text-center">
-                        <h2>Login</h2>
-                        <span class="title-line"><i class="fa fa-car"></i></span>
-                    </div>
-                </div>
-                <!-- Page Title End -->
-            </div>
-        </div>
-    </section>
-    <!--== Page Title Area End ==-->
-
-    <!--== Login Page Content Start ==-->
-    <section id="lgoin-page-wrap" class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-8 m-auto">
-                	<div class="login-page-content">
-                		<div class="login-form">
-                			<h3>Welcome Back!</h3>
-							<form action="" method="post">
-                                <p style="font-size:16px; color:red" align="center"> <?php if($msg){
+            <!-- main-heading -->
+            <h2 class="main-title-w3layouts mb-2 text-center text-white">Login</h2>
+            <!--// main-heading -->
+            <div class="form-body-w3-agile text-center w-lg-50 w-sm-75 w-100 mx-auto mt-5">
+                <form action="#" method="post" name="login">
+                    <p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
-								<div class="username">
-									<input type="text" placeholder="Email or Mobile Number" name="emailcont" required="true">
-								</div>
-								<div class="password">
-									<input type="password" placeholder="Password" name="password" required="true">
-								</div>
-								<div class="log-btn">
-									<button type="submit" name="login"><i class="fa fa-sign-in"></i> Log In</button>
-								</div>
-							</form>
-                		</div>
-                		
-                		<div class="login-other">
-                			<span class="or">or</span>
-                			<a href="forgot-password.php" class="login-with-btn facebook"> Forgot Password</a>
-                			</div>
-                		<div class="create-ac">
-                			<p>Don't have an account? <a href="register.php">Sign Up</a></p>
-                		</div>
-                		<div class="login-menu">
-                			<a href="about.php">About</a>
-                			<span>|</span>
-                			<a href="contact.php">Contact</a>
-                		</div>
-                	</div>
-                </div>
-        	</div>
+                    <div class="form-group">
+                        <label>User Name</label>
+                       <input type="text" class="form-control" name="username" required="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" name="password" required="true">
+                    </div>
+                    <div class="d-sm-flex justify-content-between">
+                        
+                        <div class="forgot col-md-6 text-sm-left text-center">
+                            <a href="forgot-password.php">forgot password?</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary error-w3l-btn mt-sm-5 mt-3 px-4" value="Sign In" name="login">Login</button>
+                </form>
+                
+                <h1 class="paragraph-agileits-w3layouts mt-2">
+                    <a href="../index.php">Back to Home</a>
+                </h1>
+            </div>
+
+           <?php include_once('includes/footer.php');?>
         </div>
-    </section>
-    <!--== Login Page Content End ==-->
-
-  <?php include_once('includes/footer.php');?>
-
-    <!--== Scroll Top Area Start ==-->
-    <div class="scroll-top">
-        <img src="assets/img/scroll-top.png" alt="JSOFT">
     </div>
-    <!--== Scroll Top Area End ==-->
 
-    <!--=======================Javascript============================-->
-    <!--=== Jquery Min Js ===-->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
-    <!--=== Jquery Migrate Min Js ===-->
-    <script src="assets/js/jquery-migrate.min.js"></script>
-    <!--=== Popper Min Js ===-->
-    <script src="assets/js/popper.min.js"></script>
-    <!--=== Bootstrap Min Js ===-->
-    <script src="assets/js/bootstrap.min.js"></script>
-    <!--=== Gijgo Min Js ===-->
-    <script src="assets/js/plugins/gijgo.js"></script>
-    <!--=== Vegas Min Js ===-->
-    <script src="assets/js/plugins/vegas.min.js"></script>
-    <!--=== Isotope Min Js ===-->
-    <script src="assets/js/plugins/isotope.min.js"></script>
-    <!--=== Owl Caousel Min Js ===-->
-    <script src="assets/js/plugins/owl.carousel.min.js"></script>
-    <!--=== Waypoint Min Js ===-->
-    <script src="assets/js/plugins/waypoints.min.js"></script>
-    <!--=== CounTotop Min Js ===-->
-    <script src="assets/js/plugins/counterup.min.js"></script>
-    <!--=== YtPlayer Min Js ===-->
-    <script src="assets/js/plugins/mb.YTPlayer.js"></script>
-    <!--=== Magnific Popup Min Js ===-->
-    <script src="assets/js/plugins/magnific-popup.min.js"></script>
-    <!--=== Slicknav Min Js ===-->
-    <script src="assets/js/plugins/slicknav.min.js"></script>
 
-    <!--=== Mian Js ===-->
-    <script src="assets/js/main.js"></script>
+    <!-- Required common Js -->
+    <script src='js/jquery-2.2.3.min.js'></script>
+    <!-- //Required common Js -->
+
+    <!-- Js for bootstrap working-->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- //Js for bootstrap working -->
 
 </body>
 

@@ -1,36 +1,35 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['vrmsaid']==0)) {
-  header('location:logout.php');
+ header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
-$adminid=$_SESSION['vrmsaid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tbladmin where ID='$adminid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tbladmin set Password='$newpassword' where ID='$adminid'");
-$msg= "Your password successully changed"; 
-} else {
+    if(isset($_POST['submit']))
+  {
 
-$msg="Your current password is wrong";
-}
+$csmsaid=$_SESSION['vrmsaid'];
+ $pagetitle=$_POST['pagetitle'];
+$pagedes=$_POST['pagedes'];
 
+ $query=mysqli_query($con,"update tblpage set PageTitle='$pagetitle',PageDescription='$pagedes' where  PageType='aboutus'");
 
-
-}
+    if ($query) {
+    $msg="About Us has been updated.";
+  }
+  else
+    {
+      $msg="Something Went Wrong. Please try again";
+    }
 
   
+}
   ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Vehicle Rental Management Sysytem | Change Password</title>
+    <title>Vehicle Rental Management Sysytem | About Us</title>
    
 
     <!-- Style-sheets -->
@@ -52,19 +51,8 @@ $msg="Your current password is wrong";
     <link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!--//web-fonts-->
-    <script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
+    <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 </head>
 
 <body>
@@ -79,7 +67,7 @@ return true;
             <!--// top-bar -->
 
             <!-- main-heading -->
-            <h2 class="main-title-w3layouts mb-2 text-center"> Change Password</h2>
+            <h2 class="main-title-w3layouts mb-2 text-center"> About Us</h2>
             <!--// main-heading -->
 
             <!-- Forms content -->
@@ -88,37 +76,39 @@ return true;
                
                 <!-- Forms-3 -->
                 <div class="outer-w3-agile mt-3">
-                    <h4 class="tittle-w3-agileits mb-4"> Change Password</h4>
+                    <h4 class="tittle-w3-agileits mb-4"> About Us</h4>
 
-   <?php
-$adminid=$_SESSION['vrmsaid'];
-$ret=mysqli_query($con,"select * from tbladmin where ID='$adminid'");
+                    <form action="#" method="post">
+                       <p style="font-size:16px; color:red" align="center"> <?php if($msg){
+    echo $msg;
+  }  ?> </p>       
+                        <?php
+
+$ret=mysqli_query($con,"select * from  tblpage where PageType='aboutus'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
-                    <form action="#" method="post" name="changepassword" onsubmit="return checkpass();">
-                        <p style="font-size:16px; color:red" align="center"> <?php if($msg){
-    echo $msg;
-  }  ?> </p>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Current Password:</label>
+                            <div class="form-group col-md-12">
+                                <label for="inputEmail4">Page Title</label>
                                 
-                                <input type="password" name="currentpassword" class=" form-control" required= "true" value="">
+                                <input type="text" name="pagetitle" class=" form-control" required= "true" value="<?php  echo $row['PageTitle'];?>">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">New Password:</label>
-                                <input type="password" name="newpassword" class="form-control" value="">
+                           
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="inputEmail4">Page Description</label>
+                                
+                                <textarea class=" form-control" id="pagedes" name="pagedes" type="text" required="true" value=""><?php  echo $row['PageDescription'];?></textarea>
                             </div>
+                           
                         </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Confirm Password:</label>
-                            <input type="password" name="confirmpassword" class="form-control" value="">
-                        </div>
-                       
+                        
                         <?php } ?>
-                        <button type="submit" class="btn btn-primary" name="submit">Change</button>
+                        
+                        <button type="submit" class="btn btn-primary" name="submit">Update</button>
                     </form>
                 </div>
               

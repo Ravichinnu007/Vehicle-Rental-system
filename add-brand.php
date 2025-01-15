@@ -1,36 +1,50 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['vrmsaid']==0)) {
   header('location:logout.php');
-  } else{
+  }
+  else{
+
 if(isset($_POST['submit']))
-{
-$adminid=$_SESSION['vrmsaid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tbladmin where ID='$adminid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tbladmin set Password='$newpassword' where ID='$adminid'");
-$msg= "Your password successully changed"; 
-} else {
-
-$msg="Your current password is wrong";
-}
-
-
-
-}
-
+  {
+    $aid=$_SESSION['vrmsaid'];
+    $bname=$_POST['brandname'];
   
+   $logo=$_FILES["images"]["name"];
+     $extension = substr($logo,strlen($logo)-4,strlen($logo));
+// allowed extensions
+$allowed_extensions = array(".jpg","jpeg",".png",".gif");
+// Validation for allowed extensions .in_array() function searches an array for a specific value.
+if(!in_array($extension,$allowed_extensions))
+{
+echo "<script>alert('Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
+}
+else
+{
+
+$brandlogo=md5($logo).$extension;
+     move_uploaded_file($_FILES["images"]["tmp_name"],"images/".$brandlogo);
+    $query=mysqli_query($con, "insert into tblbrand(BrandName,BrandLogo) value('$bname','$brandlogo')");
+    if ($query) {
+echo "<script>alert('Brand details has been submitted.');</script>";
+echo "<script>window.location.href ='add-brand.php'</script>";
+  }
+  else
+    {
+      $msg="Something Went Wrong. Please try again";
+    }
+
+  }
+
+}
   ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Vehicle Rental Management Sysytem | Change Password</title>
+    <title>Vehicle Rental Management Sysytem | Vehicle Brands</title>
    
 
     <!-- Style-sheets -->
@@ -52,19 +66,6 @@ $msg="Your current password is wrong";
     <link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!--//web-fonts-->
-    <script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
 </head>
 
 <body>
@@ -79,7 +80,7 @@ return true;
             <!--// top-bar -->
 
             <!-- main-heading -->
-            <h2 class="main-title-w3layouts mb-2 text-center"> Change Password</h2>
+            <h2 class="main-title-w3layouts mb-2 text-center"> Vehicle Brands</h2>
             <!--// main-heading -->
 
             <!-- Forms content -->
@@ -88,37 +89,29 @@ return true;
                
                 <!-- Forms-3 -->
                 <div class="outer-w3-agile mt-3">
-                    <h4 class="tittle-w3-agileits mb-4"> Change Password</h4>
+                    <h4 class="tittle-w3-agileits mb-4"> Vehicle Brands</h4>
 
-   <?php
-$adminid=$_SESSION['vrmsaid'];
-$ret=mysqli_query($con,"select * from tbladmin where ID='$adminid'");
-$cnt=1;
-while ($row=mysqli_fetch_array($ret)) {
-
-?>
-                    <form action="#" method="post" name="changepassword" onsubmit="return checkpass();">
-                        <p style="font-size:16px; color:red" align="center"> <?php if($msg){
-    echo $msg;
-  }  ?> </p>
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputEmail4">Current Password:</label>
+                                <label for="inputEmail4">Brand Name</label>
                                 
-                                <input type="password" name="currentpassword" class=" form-control" required= "true" value="">
+                                <input class=" form-control" id="brandname" name="brandname" type="text" value="" required="true">
                             </div>
+                           
+                        </div>
+                        
+                        <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputPassword4">New Password:</label>
-                                <input type="password" name="newpassword" class="form-control" value="">
+                                <label for="inputEmail4">Brand Logo</label>
+                                
+                                <input type="file" class="form-control" name="images" id="images" value="" required="true">
                             </div>
+                           
                         </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Confirm Password:</label>
-                            <input type="password" name="confirmpassword" class="form-control" value="">
-                        </div>
-                       
-                        <?php } ?>
-                        <button type="submit" class="btn btn-primary" name="submit">Change</button>
+                        
+                        <button type="submit" class="btn btn-primary" name="submit">Add</button>
                     </form>
                 </div>
               
